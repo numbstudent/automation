@@ -1,3 +1,5 @@
+### google-chrome --remote-debugging-port=9014 --user-data-dir="Documents"
+
 # from selenium import webdriver
 # from selenium.webdriver.chrome.options import Options
 # import pyautogui
@@ -52,11 +54,10 @@ phone = str(67074145354)
 def getkey(phone):
     from urllib import request, parse
     import json
-    data = parse.urlencode({"to":phone}).encode()
+    data = parse.urlencode({"to":phone,"limit":1}).encode()
     req =  request.Request("http://api.bonav.xyz:8888/index.php/recordretrieval", data=data) # this will make the method "POST"
     resp = request.urlopen(req)
     content = resp.read()
-    return json.loads(content)
-
-# getkey
-print(getkey(phone))
+    jsoncontent = json.loads(content)
+    msg = jsoncontent[0]['msg']
+    return msg.split(" ")[1]
