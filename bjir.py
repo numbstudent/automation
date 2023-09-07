@@ -14,13 +14,17 @@ from time import sleep
 def getkey(phone):
     from urllib import request, parse
     import json
-    data = parse.urlencode({"to":phone,"limit":1}).encode()
-    req =  request.Request("http://api.bonav.xyz:8888/index.php/recordretrieval", data=data) # this will make the method "POST"
+    import re
+    data = parse.urlencode({"to": phone, "limit": 1}).encode()
+    # this will make the method "POST"
+    req = request.Request(
+        "http://api.bonav.xyz:8888/index.php/recordretrieval", data=data)
     resp = request.urlopen(req)
     content = resp.read()
     jsoncontent = json.loads(content)
-    msg = jsoncontent[0]['msg']
-    if len(msg)>0:
+    msg = jsoncontent[0]['msg'].strip(" ")
+    msg = re.sub(' +', ' ', msg)
+    if len(msg) > 0:
         print("record found.")
         print("OTP: "+msg.split(" ")[1])
         return msg.split(" ")[1]
@@ -53,6 +57,7 @@ pyautogui.press('enter')
 #find phone
 phone = str(67074145354)
 phone = str(67074050130)
+phone = str(67074113393)
 separator = 3
 phone_pt1 = phone[:separator]
 phone_pt2 = phone[separator:]
@@ -72,20 +77,29 @@ pyautogui.press('enter')
 sleep(5)
 try:
     driver.find_element(By.CLASS_NAME, "captcha_verify_bar")
+    print("Require Captcha!!")
+    sleep(30)
+except:
     pyautogui.keyDown('shift')
     pyautogui.press('tab')
     pyautogui.keyUp('shift')
     sleep(5)
-except:
-    print("Require Captcha!!")
-    sleep(30)
     
-driver.find_element(By.CLASS_NAME, "code-input")
+driver.find_element(By.CLASS_NAME, "code-input").click()
 #click register
 otp = getkey(phone)
 pyautogui.typewrite(otp, interval=0.3)
 #submit data
 pyautogui.press('tab')
+pyautogui.press('enter')
+
+sleep(10)
+pyautogui.typewrite("__balonkuada50", interval=0.3)
+pyautogui.press('tab')
+pyautogui.typewrite("tarou"+phone_pt2, interval=0.3)
 pyautogui.press('tab')
 pyautogui.press('enter')
+
+
+# driver.find_element("xpath", "//*[contains(text(), 'Next')]").click()
 # driver.find_element(By.XPATH, '//button[text()="Send code"]').click()
