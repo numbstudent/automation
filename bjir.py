@@ -1,7 +1,13 @@
 ## google-chrome --remote-debugging-port=9014 --user-data-dir="Documents"
+## D:\chrome-win64\chrome.exe  --remote-debugging-port=9014 --user-data-dir="D:/Chrome Debug"
+# <div type = "error" aria-live = "assertive" class = "tiktok-tfg9wk-DivTextContainer e3v3zbj0" > <span role = "status" > Maximum number of attempts reached. Try again later. < /span > </div >
+# chrome  --remote-debugging-port=9015 --user-data-dir="D:/Chrome Debug"
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+
 import pyautogui
 from time import sleep
 
@@ -26,8 +32,10 @@ countrydict = {'670':"timor",'62':"indonesia"}
 
 pyautogui.click(x=200,y=200)
 
+# service = Service()
 chrome_options = Options()
-chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9014")
+chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9015")
+# driver = webdriver.Chrome(service=service, options=chrome_options)
 driver = webdriver.Chrome(options=chrome_options)
 driver.get("https://www.tiktok.com/signup/phone-or-email/phone")
 #find month
@@ -43,7 +51,7 @@ driver.find_element("xpath","//*[contains(text(), 'Year')]").click()
 pyautogui.typewrite("1991", interval=0.3)
 pyautogui.press('enter')
 #find phone
-phone = str(67074042125)
+phone = str(67074145354)
 phone = str(67074050130)
 separator = 3
 phone_pt1 = phone[:separator]
@@ -61,14 +69,23 @@ pyautogui.typewrite(phone_pt2, interval=0.3)
 pyautogui.press('tab')
 pyautogui.press('tab')
 pyautogui.press('enter')
-sleep(30)
+sleep(5)
+try:
+    driver.find_element(By.CLASS_NAME, "captcha_verify_bar")
+    pyautogui.keyDown('shift')
+    pyautogui.press('tab')
+    pyautogui.keyUp('shift')
+    sleep(5)
+except:
+    print("Require Captcha!!")
+    sleep(30)
+    
+driver.find_element(By.CLASS_NAME, "code-input")
 #click register
-pyautogui.keyDown('shift')
-pyautogui.press('tab')
-pyautogui.keyUp('shift')
 otp = getkey(phone)
 pyautogui.typewrite(otp, interval=0.3)
 #submit data
+pyautogui.press('tab')
 pyautogui.press('tab')
 pyautogui.press('enter')
 # driver.find_element(By.XPATH, '//button[text()="Send code"]').click()
