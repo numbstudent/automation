@@ -15,7 +15,7 @@ def getkey(phone):
     from urllib import request, parse
     import json
     import re
-    data = parse.urlencode({"to": phone, "limit": 1}).encode()
+    data = parse.urlencode({"cli":"TikTok", "to": phone, "limit": 1}).encode()
     # this will make the method "POST"
     req = request.Request(
         "http://api.bonav.xyz:8888/index.php/recordretrieval", data=data)
@@ -42,6 +42,8 @@ chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9015")
 # driver = webdriver.Chrome(service=service, options=chrome_options)
 driver = webdriver.Chrome(options=chrome_options)
 driver.get("https://www.tiktok.com/signup/phone-or-email/phone")
+# driver.get("https://www.tiktok.com/login/phone-or-email")
+
 #find month
 driver.find_element("xpath","//*[contains(text(), 'Month')]").click()
 pyautogui.typewrite("july", interval=0.3)
@@ -58,6 +60,7 @@ pyautogui.press('enter')
 phone = str(67074145354)
 phone = str(67074050130)
 phone = str(67074113393)
+phone = str(6707412345)
 separator = 3
 phone_pt1 = phone[:separator]
 phone_pt2 = phone[separator:]
