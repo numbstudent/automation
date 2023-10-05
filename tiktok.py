@@ -36,14 +36,7 @@ def getkey(phone):
 countrydict = {'670':"timor",'62':"indonesia"}
 pyautogui.click(x=200,y=200)
 
-def initialize(phone):
-    chrome_options = Options()
-    chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9015")
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.get("https://www.tiktok.com/signup/phone-or-email/phone")
-    run_automation(phone)
-
-def run_automation(phone):
+def run_signup(phone):
     #find month
     driver.find_element("xpath","//*[contains(text(), 'Month')]").click()
     pyautogui.typewrite("july", interval=0.3)
@@ -70,6 +63,12 @@ def run_automation(phone):
     pyautogui.press('enter')
     pyautogui.press('tab')
     pyautogui.typewrite(phone_pt2, interval=0.3)
+    result = True
+    remark = "-"
+    return result, remark
+
+def run_automation(phone):
+    
     #click button send code
     pyautogui.press('tab')
     pyautogui.press('tab')
@@ -78,6 +77,7 @@ def run_automation(phone):
     try:
         driver.find_element(By.CLASS_NAME, "captcha_verify_bar")
         print("Require Captcha!!")
+        playsound('alert.mp3')
         sleep(30)
     except:
         pyautogui.keyDown('shift')
@@ -101,8 +101,28 @@ def run_automation(phone):
     pyautogui.press('tab')
     pyautogui.press('enter')
 
+import pandas as pd
+from playsound import playsound
 df = pd.read_csv("phone.csv")
-for i in df["Number"]:
-    # initialize(i)
-    print(i)
-    # print(i.dtype)
+df["Tested"] = False
+df["Result"] = False
+df["Remark"] = "-"
+
+for i in df.index[:10]:
+
+    chrome_options = Options()
+    chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9015")
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.get("https://www.tiktok.com/signup/phone-or-email/phone")
+    run_signup(phone)
+    result, remark = run_signup(df.loc[i,"Remark"])
+    df.loc[i,"Tested"] = True
+    df.loc[i,"Result"] = result
+    df.loc[i,"Remark"] = remark
+    # print(df.Number[i],df.Result[i])
+    df.to_csv("phone.csv", index=False)
+    sleep(60)
+
+
+# df = pd.read_csv("phone.csv")
+# print(df.head())
